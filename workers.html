@@ -83,6 +83,7 @@
               <label>نوع العملية</label>
               <select id="txType">
                 <option value="withdrawal">سحب (دفعة/سلفة تلقائيًا)</option>
+                <option value="salary">راتب شهر (تسجيل يدوي لعامل واحد)</option>
                 <option value="addition">إضافة (منحة / ساعات إضافية)</option>
                 <option value="deduction">اقتطاع (غياب / تأخر / خصم)</option>
                 <option value="advance_repayment">سداد سلفة</option>
@@ -91,6 +92,18 @@
             <div class="field num">
               <label>المبلغ (DZD)</label>
               <input type="number" id="txAmount" min="0" step="1">
+            </div>
+            <div class="field" id="txCategoryWrap" style="display:none">
+              <label>التصنيف</label>
+              <select id="txCategory"></select>
+            </div>
+            <div class="field" id="txSalaryPeriodWrap" style="display:none">
+              <label>شهر الراتب</label>
+              <select id="txSalaryMonth"></select>
+            </div>
+            <div class="field" id="txSalaryYearWrap" style="display:none">
+              <label>سنة الراتب</label>
+              <select id="txSalaryYear"></select>
             </div>
             <div class="field">
               <label>تاريخ العملية</label>
@@ -102,7 +115,7 @@
             <input type="text" id="txDescription" placeholder="مثال: دفعة نقدية، خصم غياب يوم...">
           </div>
           <button class="btn" id="btnSubmitTx">تسجيل العملية</button>
-          <div class="helper">اختيار "سحب" يطبّق القاعدة المحاسبية تلقائيًا: يُخصم أولاً من المستحق، وما يتجاوزه يُسجَّل سلفة إضافية (بشرط عدم تجاوز حد السلفة).</div>
+          <div class="helper">اختيار "سحب" يطبّق القاعدة المحاسبية تلقائيًا: يُخصم أولاً من المستحق، وما يتجاوزه يُسجَّل سلفة إضافية (بشرط عدم تجاوز حد السلفة). اختيار "راتب شهر" يُستخدم لتسجيل راتب شهر سابق يدويًا لهذا العامل فقط — مفيد عند إدخال بيانات دفتر ورقي قديم، أو عند إضافة عامل بأثر رجعي بعد أن سبق توليد ذلك الشهر جماعيًا لبقية العمال.</div>
         </div>
       </div>
 
