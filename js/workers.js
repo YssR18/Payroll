@@ -131,6 +131,47 @@ document.getElementById('btnSaveWorker').addEventListener('click', async () => {
 const txDateInput = document.getElementById('txDate');
 if(txDateInput) txDateInput.value = todayISO();
 
+// تصنيفات جاهزة للاقتطاعات والإضافات — تظهر فقط عند اختيار النوع المناسب
+const CATEGORY_OPTIONS = {
+  deduction: ['غياب', 'تأخر', 'خصم إداري', 'خصم آخر'],
+  addition: ['منحة', 'ساعات إضافية', 'مكافأة', 'إضافة أخرى'],
+};
+
+// يملأ قائمتي الشهر والسنة لتسجيل راتب يدوي، مرة واحدة عند تحميل الصفحة
+(function populateSalaryPeriodSelects(){
+  const monthSel = document.getElementById('txSalaryMonth');
+  const yearSel = document.getElementById('txSalaryYear');
+  if(!monthSel || !yearSel) return;
+  const now = new Date();
+  MONTH_NAMES.forEach((m, i) => {
+    monthSel.innerHTML += `<option value="${i+1}" ${i+1 === now.getMonth()+1 ? 'selected':''}>${m}</option>`;
+  });
+  for(let y = now.getFullYear() - 2; y <= now.getFullYear(); y++){
+    yearSel.innerHTML += `<option value="${y}" ${y === now.getFullYear() ? 'selected':''}>${y}</option>`;
+  }
+})();
+
+function updateCategoryField(){
+  const type = document.getElementById('txType').value;
+  const wrap = document.getElementById('txCategoryWrap');
+  const sel = document.getElementById('txCategory');
+  const salaryMonthWrap = document.getElementById('txSalaryPeriodWrap');
+  const salaryYearWrap = document.getElementById('txSalaryYearWrap');
+  if(salaryMonthWrap) salaryMonthWrap.style.display = type === 'salary' ? '' : 'none';
+  if(salaryYearWrap) salaryYearWrap.style.display = type === 'salary' ? '' : 'none';
+  if(!wrap || !sel) return;
+  const options = CATEGORY_OPTIONS[type];
+  if(options){
+    wrap.style.display = '';
+    sel.innerHTML = options.map(c => `<option value="${c}">${c}</option>`).join('');
+  } else {
+    wrap.style.display = 'none';
+    sel.innerHTML = '';
+  }
+}
+document.getElementById('txType')?.addEventListener('change', updateCategoryField);
+updateCategoryField();
+
 async function loadWorkerDetail(id){
   try{
     const [w, b] = await Promise.all([Data.getWorker(id), Data.getBalance(id)]);
@@ -153,7 +194,7 @@ async function loadWorkerDetail(id){
     ledgerBody.innerHTML = txs.map(t => `
       <tr>
         <td>${fmtDate(t.transaction_date)}</td>
-        <td>${TYPE_LABELS[t.type] || t.type}${t.overridden_limit ? ' <span class="pill warn">تجاوز الحد</span>' : ''}</td>
+        <td>${TYPE_LABELS[t.type] || t.type}${t.category ? ' — ' + t.category : ''}${t.overridden_limit ? ' <span class="pill warn">تجاوز الحد</span>' : ''}</td>
         <td class="num">${fmtMoney(t.amount)}</td>
         <td>${t.description || ''}</td>
       </tr>`).join('');
@@ -179,9 +220,19 @@ async function submitTransaction(overrideLimit){
       if(result.paymentPart > 0) msg += `تم تسجيل دفعة بقيمة ${fmtMoney(result.paymentPart)}. `;
       if(result.advancePart > 0) msg += `تم تسجيل سلفة إضافية بقيمة ${fmtMoney(result.advancePart)}.`;
       alert(msg || 'تم تسجيل العملية');
-    } else {
+    } else if(type === 'salary'){
+      const pMonth = Number(document.getElementById('txSalaryMonth').value);
+      const pYear = Number(document.getElementById('txSalaryYear').value);
       await Data.insertTransaction({
-        worker_id: workerId, type, amount, description,
+        worker_id: workerId, type:'salary', amount,
+        description: description || `راتب ${MONTH_NAMES[pMonth-1]} ${pYear}`,
+        period_year: pYear, period_month: pMonth,
+        transaction_date: date, created_by:'المدير',
+      });
+    } else {
+      const category = CATEGORY_OPTIONS[type] ? document.getElementById('txCategory').value : null;
+      await Data.insertTransaction({
+        worker_id: workerId, type, amount, description, category,
         transaction_date: date, created_by:'المدير',
       });
     }
