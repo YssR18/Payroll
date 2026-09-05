@@ -55,6 +55,7 @@
         </div>
         <div style="display:flex; gap:.5rem">
           <button class="btn secondary" id="btnEditWorker">تعديل بيانات العامل</button>
+          <button class="btn danger" id="btnDeleteWorker">حذف العامل نهائيًا</button>
           <a class="btn secondary" href="workers.html">⇦ رجوع للقائمة</a>
         </div>
       </div>
@@ -99,7 +100,7 @@
             <input type="text" id="txDescription" placeholder="مثال: دفعة نقدية، خصم غياب يوم...">
           </div>
           <button class="btn" id="btnSubmitTx">تسجيل العملية</button>
-          <div class="helper">اختيار "سحب" يطبّق القاعدة المحاسبية تلقائيًا: يُخصم أولاً من المستحق، وما يتجاوزه يُسجَّل سلفة إضافية (بشرط عدم تجاوز حد السلفة). يمكنك اختيار تاريخ من الماضي لإدخال بيانات دفترك القديم.</div>
+          <div class="helper">اختيار "سحب" يطبّق القاعدة المحاسبية تلقائيًا: يُخصم أولاً من المستحق، وما يتجاوزه يُسجَّل سلفة إضافية (بشرط عدم تجاوز حد السلفة).</div>
         </div>
       </div>
 
@@ -162,6 +163,23 @@
     <div class="modal-actions">
       <button class="btn secondary" id="btnCancelOverride">إلغاء</button>
       <button class="btn danger" id="btnConfirmOverride">تجاوز الحد وتسجيل العملية</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ نافذة تأكيد حذف عامل ============ -->
+<div class="modal-backdrop" id="deleteModal">
+  <div class="modal">
+    <h3>⚠️ حذف العامل نهائيًا</h3>
+    <p id="deleteModalText"></p>
+    <p class="helper">هذا الإجراء لا يمكن التراجع عنه، وسيحذف أيضًا كل السجل المالي لهذا العامل (الرواتب، الدفعات، السلف...). للتأكيد، اكتب اسم العامل كاملاً في الخانة أدناه.</p>
+    <div class="field">
+      <label>اكتب اسم العامل للتأكيد</label>
+      <input type="text" id="deleteConfirmInput">
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="btnCancelDelete">إلغاء</button>
+      <button class="btn danger" id="btnConfirmDelete">حذف نهائيًا</button>
     </div>
   </div>
 </div>
