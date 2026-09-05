@@ -115,7 +115,13 @@ const Data = {
   },
 };
 
-async function recordWithdrawal({ workerId, amount, description, overrideLimit = false, createdBy = 'المدير' }){
+// ------------------------------------------------------------
+// منطق محاسبي: تسجيل حركة "سحب" (دفعة و/أو سلفة) — يطبّق قاعدة
+// "الدفعة من المستحق أولاً، والباقي سلفة إضافية" الموضّحة في الخطة.
+// يرجع تفصيل ما تم تسجيله حتى تُعرض رسالة واضحة للمستخدم.
+// ------------------------------------------------------------
+async function recordWithdrawal({ workerId, amount, description, overrideLimit = false, createdBy = 'المدير', date }){
+  date = date || todayISO();
   amount = Number(amount);
   if(!(amount > 0)) throw new Error('المبلغ يجب أن يكون أكبر من صفر');
 
@@ -142,14 +148,14 @@ async function recordWithdrawal({ workerId, amount, description, overrideLimit =
     inserted.push(await Data.insertTransaction({
       worker_id: workerId, type:'payment', amount: paymentPart,
       description: description || 'دفعة من الراتب المستحق',
-      transaction_date: todayISO(), created_by: createdBy,
+      transaction_date: date, created_by: createdBy,
     }));
   }
   if(advancePart > 0){
     inserted.push(await Data.insertTransaction({
       worker_id: workerId, type:'advance', amount: advancePart,
       description: description || 'سلفة إضافية',
-      transaction_date: todayISO(), created_by: createdBy,
+      transaction_date: date, created_by: createdBy,
       overridden_limit: overrideLimit,
     }));
   }
