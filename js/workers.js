@@ -14,6 +14,7 @@ if(workerId){
   loadWorkersList();
 }
 
+// ---------------- قائمة العمال ----------------
 async function loadWorkersList(){
   try{
     const [workers, balances] = await Promise.all([Data.listWorkers(), Data.listBalances()]);
@@ -39,6 +40,7 @@ async function loadWorkersList(){
   }
 }
 
+// ---------------- نافذة إضافة/تعديل عامل ----------------
 const workerModal = document.getElementById('workerModal');
 document.getElementById('btnAddWorker')?.addEventListener('click', () => openWorkerModal());
 document.getElementById('btnCancelWorker').addEventListener('click', () => workerModal.classList.remove('open'));
@@ -47,10 +49,21 @@ document.getElementById('btnEditWorker')?.addEventListener('click', async () => 
   openWorkerModal(w);
 });
 
-function openWorkerModal(w){
+// يولّد رقم العامل التالي تلقائيًا بالاعتماد على أعلى رقم موجود بصيغة EMP-0001
+async function nextEmployeeCode(){
+  const workers = await Data.listWorkers();
+  let max = 0;
+  workers.forEach(w => {
+    const m = /(\d+)/.exec(w.employee_code || '');
+    if(m){ const n = parseInt(m[1], 10); if(n > max) max = n; }
+  });
+  return 'EMP-' + String(max + 1).padStart(4, '0');
+}
+
+async function openWorkerModal(w){
   document.getElementById('workerModalTitle').textContent = w ? 'تعديل بيانات عامل' : 'إضافة عامل جديد';
   document.getElementById('wId').value = w?.id || '';
-  document.getElementById('fCode').value = w?.employee_code || '';
+  document.getElementById('fCode').value = w ? w.employee_code : await nextEmployeeCode();
   document.getElementById('fName').value = w?.full_name || '';
   document.getElementById('fPosition').value = w?.position || '';
   document.getElementById('fHireDate').value = w?.hire_date || '';
@@ -88,6 +101,11 @@ document.getElementById('btnSaveWorker').addEventListener('click', async () => {
   }
 });
 
+// ---------------- تفاصيل عامل + السجل المالي ----------------
+// يضبط حقل التاريخ الافتراضي على اليوم عند تحميل الصفحة
+const txDateInput = document.getElementById('txDate');
+if(txDateInput) txDateInput.value = todayISO();
+
 async function loadWorkerDetail(id){
   try{
     const [w, b] = await Promise.all([Data.getWorker(id), Data.getBalance(id)]);
@@ -119,17 +137,19 @@ async function loadWorkerDetail(id){
   }
 }
 
+// ---------------- تسجيل عملية ----------------
 document.getElementById('btnSubmitTx')?.addEventListener('click', () => submitTransaction(false));
 
 async function submitTransaction(overrideLimit){
   const type = document.getElementById('txType').value;
   const amount = Number(document.getElementById('txAmount').value);
   const description = document.getElementById('txDescription').value.trim();
+  const date = document.getElementById('txDate').value || todayISO();
   if(!(amount > 0)){ alert('أدخل مبلغًا صحيحًا أكبر من صفر'); return; }
 
   try{
     if(type === 'withdrawal'){
-      const result = await recordWithdrawal({ workerId, amount, description, overrideLimit });
+      const result = await recordWithdrawal({ workerId, amount, description, overrideLimit, date });
       let msg = '';
       if(result.paymentPart > 0) msg += `تم تسجيل دفعة بقيمة ${fmtMoney(result.paymentPart)}. `;
       if(result.advancePart > 0) msg += `تم تسجيل سلفة إضافية بقيمة ${fmtMoney(result.advancePart)}.`;
@@ -137,7 +157,7 @@ async function submitTransaction(overrideLimit){
     } else {
       await Data.insertTransaction({
         worker_id: workerId, type, amount, description,
-        transaction_date: todayISO(), created_by:'المدير',
+        transaction_date: date, created_by:'المدير',
       });
     }
     document.getElementById('txAmount').value = '';
