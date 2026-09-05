@@ -54,6 +54,13 @@ const Data = {
     return data;
   },
 
+  // يحذف العامل نهائيًا من قاعدة البيانات. بفضل ON DELETE CASCADE في الجدول،
+  // سيُحذف تلقائيًا كل السجل المالي (transactions) المرتبط بهذا العامل.
+  async deleteWorker(id){
+    const { error } = await supabaseClient.from('workers').delete().eq('id', id);
+    if(error) throw error;
+  },
+
   async listBalances(){
     const { data, error } = await supabaseClient.from('worker_balances').select('*');
     if(error) throw error;
