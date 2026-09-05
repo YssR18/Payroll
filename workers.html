@@ -22,6 +22,7 @@
 
   <main class="main">
 
+    <!-- ============ قائمة العمال ============ -->
     <div id="listView">
       <div class="topbar">
         <h1>العمال</h1>
@@ -45,6 +46,7 @@
       </div>
     </div>
 
+    <!-- ============ تفاصيل عامل ============ -->
     <div id="detailView" style="display:none">
       <div class="topbar">
         <div>
@@ -87,13 +89,17 @@
               <label>المبلغ (DZD)</label>
               <input type="number" id="txAmount" min="0" step="1">
             </div>
+            <div class="field">
+              <label>تاريخ العملية</label>
+              <input type="date" id="txDate">
+            </div>
           </div>
           <div class="field">
             <label>الوصف</label>
             <input type="text" id="txDescription" placeholder="مثال: دفعة نقدية، خصم غياب يوم...">
           </div>
           <button class="btn" id="btnSubmitTx">تسجيل العملية</button>
-          <div class="helper">اختيار "سحب" يطبّق القاعدة المحاسبية تلقائيًا: يُخصم أولاً من المستحق، وما يتجاوزه يُسجَّل سلفة إضافية (بشرط عدم تجاوز حد السلفة).</div>
+          <div class="helper">اختيار "سحب" يطبّق القاعدة المحاسبية تلقائيًا: يُخصم أولاً من المستحق، وما يتجاوزه يُسجَّل سلفة إضافية (بشرط عدم تجاوز حد السلفة). يمكنك اختيار تاريخ من الماضي لإدخال بيانات دفترك القديم.</div>
         </div>
       </div>
 
@@ -119,12 +125,13 @@
   <a href="reports.html"><span class="ic">📊</span>التقارير</a>
 </nav>
 
+<!-- ============ نافذة إضافة/تعديل عامل ============ -->
 <div class="modal-backdrop" id="workerModal">
   <div class="modal">
     <h3 id="workerModalTitle">إضافة عامل جديد</h3>
     <input type="hidden" id="wId">
     <div class="form-row">
-      <div class="field"><label>رقم العامل</label><input type="text" id="fCode" placeholder="EMP-0001"></div>
+      <div class="field"><label>رقم العامل (تلقائي)</label><input type="text" id="fCode" readonly style="background:#f2f4f8; color:#8a94a6"></div>
       <div class="field"><label>الاسم الكامل</label><input type="text" id="fName"></div>
     </div>
     <div class="form-row">
@@ -146,6 +153,7 @@
   </div>
 </div>
 
+<!-- ============ نافذة تأكيد تجاوز حد السلفة ============ -->
 <div class="modal-backdrop" id="limitModal">
   <div class="modal">
     <h3>⚠️ المبلغ يتجاوز حد السلفة</h3>
