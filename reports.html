@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التقارير — نظام إدارة الرواتب</title>
+<link rel="stylesheet" href="css/style.css">
+<style>@media print{ .sidebar, .mobile-nav, .no-print{ display:none !important; } .main{ padding:0 } }</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-title">دفتر الرواتب</div>
+      <div class="brand-sub">نظام إدارة رواتب المؤسسة</div>
+    </div>
+    <a class="nav-link" href="index.html">🏠 لوحة التحكم</a>
+    <a class="nav-link" href="workers.html">👥 العمال</a>
+    <a class="nav-link" href="salaries.html">💰 الرواتب الشهرية</a>
+    <a class="nav-link" href="reports.html">📊 التقارير</a>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1>التقارير</h1>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>إجمالي المؤسسة</h2></div>
+      <div class="section-body" style="padding:0">
+        <table>
+          <thead><tr><th>البند</th><th class="num">المبلغ</th></tr></thead>
+          <tbody id="totalsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head no-print">
+        <h2>كشف حساب عامل</h2>
+        <div style="display:flex; gap:.5rem; align-items:center">
+          <select id="selWorker"></select>
+          <button class="btn secondary" id="btnPrint">طباعة / PDF</button>
+        </div>
+      </div>
+      <div class="section-body">
+        <div id="statementHeader"></div>
+        <table>
+          <thead><tr><th>التاريخ</th><th>النوع</th><th class="num">المبلغ</th><th>الوصف</th></tr></thead>
+          <tbody id="statementTable"></tbody>
+        </table>
+        <div class="empty" id="statementEmpty" style="display:none">اختر عاملًا لعرض كشف حسابه</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <a href="index.html"><span class="ic">🏠</span>الرئيسية</a>
+  <a href="workers.html"><span class="ic">👥</span>العمال</a>
+  <a href="salaries.html"><span class="ic">💰</span>الرواتب</a>
+  <a href="reports.html" class="active"><span class="ic">📊</span>التقارير</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/app.js"></script>
+<script src="js/reports.js"></script>
+</body>
+</html>
