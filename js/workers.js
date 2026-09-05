@@ -56,15 +56,13 @@ document.getElementById('btnDeleteWorker')?.addEventListener('click', async () =
   document.getElementById('deleteModalText').textContent =
     `أنت على وشك حذف العامل "${w.full_name}" (${w.employee_code}) وكل سجلاته المالية بشكل نهائي.`;
   document.getElementById('deleteConfirmInput').value = '';
-  deleteModal.dataset.expectedName = w.full_name;
   deleteModal.classList.add('open');
 });
 document.getElementById('btnCancelDelete')?.addEventListener('click', () => deleteModal.classList.remove('open'));
 document.getElementById('btnConfirmDelete')?.addEventListener('click', async () => {
   const typed = document.getElementById('deleteConfirmInput').value.trim();
-  const expected = deleteModal.dataset.expectedName || '';
-  if(typed !== expected){
-    alert('الاسم المكتوب لا يطابق اسم العامل بالضبط. لم يتم الحذف.');
+  if(typed !== 'حذف'){
+    alert('اكتب كلمة "حذف" بالضبط في الخانة للتأكيد. لم يتم الحذف.');
     return;
   }
   try{
