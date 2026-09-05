@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم — نظام إدارة الرواتب</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-title">دفتر الرواتب</div>
+      <div class="brand-sub">نظام إدارة رواتب المؤسسة</div>
+    </div>
+    <a class="nav-link" href="index.html">🏠 لوحة التحكم</a>
+    <a class="nav-link" href="workers.html">👥 العمال</a>
+    <a class="nav-link" href="salaries.html">💰 الرواتب الشهرية</a>
+    <a class="nav-link" href="reports.html">📊 التقارير</a>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1>نظرة عامة</h1>
+      <div class="date" id="todayLabel"></div>
+    </div>
+
+    <div id="alertBox"></div>
+
+    <div class="stat-grid" id="statGrid">
+      <div class="stat"><div class="label">عدد العمال النشطين</div><div class="value num">—</div></div>
+      <div class="stat"><div class="label">إجمالي الرواتب المستحقة</div><div class="value num">—</div></div>
+      <div class="stat accent-brass"><div class="label">إجمالي المبالغ المدفوعة</div><div class="value num">—</div></div>
+      <div class="stat accent-brick"><div class="label">إجمالي السلف القائمة</div><div class="value num">—</div></div>
+      <div class="stat"><div class="label">إجمالي المتبقي للعمال</div><div class="value num">—</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>العمال الذين لديهم سلف قائمة</h2>
+      </div>
+      <div class="section-body" style="padding:0">
+        <table>
+          <thead><tr><th>العامل</th><th class="num">رصيد السلفة</th><th class="num">حد السلفة</th></tr></thead>
+          <tbody id="advancesTable"></tbody>
+        </table>
+        <div class="empty" id="advancesEmpty" style="display:none">لا توجد سلف قائمة حاليًا</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>آخر العمليات</h2></div>
+      <div class="section-body" style="padding:0">
+        <table>
+          <thead><tr><th>التاريخ</th><th>العامل</th><th>النوع</th><th class="num">المبلغ</th><th>الوصف</th></tr></thead>
+          <tbody id="recentTable"></tbody>
+        </table>
+        <div class="empty" id="recentEmpty" style="display:none">لا توجد عمليات مسجلة بعد</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <a href="index.html" class="active"><span class="ic">🏠</span>الرئيسية</a>
+  <a href="workers.html"><span class="ic">👥</span>العمال</a>
+  <a href="salaries.html"><span class="ic">💰</span>الرواتب</a>
+  <a href="reports.html"><span class="ic">📊</span>التقارير</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
