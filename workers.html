@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>العمال — نظام إدارة الرواتب</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-title">دفتر الرواتب</div>
+      <div class="brand-sub">نظام إدارة رواتب المؤسسة</div>
+    </div>
+    <a class="nav-link" href="index.html">🏠 لوحة التحكم</a>
+    <a class="nav-link" href="workers.html">👥 العمال</a>
+    <a class="nav-link" href="salaries.html">💰 الرواتب الشهرية</a>
+    <a class="nav-link" href="reports.html">📊 التقارير</a>
+  </aside>
+
+  <main class="main">
+
+    <div id="listView">
+      <div class="topbar">
+        <h1>العمال</h1>
+        <button class="btn" id="btnAddWorker">+ إضافة عامل</button>
+      </div>
+      <div id="listAlert"></div>
+      <div class="section">
+        <div class="section-body" style="padding:0">
+          <table>
+            <thead>
+              <tr>
+                <th>رقم العامل</th><th>الاسم</th><th>الوظيفة</th>
+                <th class="num">الراتب الشهري</th><th class="num">المستحق المتبقي</th>
+                <th class="num">السلفة</th><th>الحالة</th>
+              </tr>
+            </thead>
+            <tbody id="workersTable"></tbody>
+          </table>
+          <div class="empty" id="workersEmpty" style="display:none">لا يوجد عمال بعد — ابدأ بإضافة عامل جديد</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="detailView" style="display:none">
+      <div class="topbar">
+        <div>
+          <h1 id="wFullName">—</h1>
+          <div class="date"><span id="wCode"></span> · <span id="wPosition"></span> · التحق في <span id="wHireDate"></span></div>
+        </div>
+        <div style="display:flex; gap:.5rem">
+          <button class="btn secondary" id="btnEditWorker">تعديل بيانات العامل</button>
+          <a class="btn secondary" href="workers.html">⇦ رجوع للقائمة</a>
+        </div>
+      </div>
+
+      <div id="detailAlert"></div>
+
+      <div class="stat-grid">
+        <div class="stat"><div class="label">الراتب الشهري</div><div class="value num" id="wBaseSalary">—</div></div>
+        <div class="stat"><div class="label">إجمالي المستحق المتراكم</div><div class="value num" id="wAccrued">—</div></div>
+        <div class="stat accent-brass"><div class="label">المبالغ المستلمة</div><div class="value num" id="wPaid">—</div></div>
+        <div class="stat"><div class="label">الرصيد المستحق المتبقي</div><div class="value num" id="wDue">—</div></div>
+        <div class="stat accent-brick"><div class="label">السلفة القائمة</div><div class="value num" id="wAdvance">—</div></div>
+        <div class="stat"><div class="label">الحد الأقصى للسلفة</div><div class="value num" id="wAdvLimit">—</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <h2>تسجيل عملية</h2>
+        </div>
+        <div class="section-body">
+          <div class="form-row">
+            <div class="field">
+              <label>نوع العملية</label>
+              <select id="txType">
+                <option value="withdrawal">سحب (دفعة/سلفة تلقائيًا)</option>
+                <option value="addition">إضافة (منحة / ساعات إضافية)</option>
+                <option value="deduction">اقتطاع (غياب / تأخر / خصم)</option>
+                <option value="advance_repayment">سداد سلفة</option>
+              </select>
+            </div>
+            <div class="field num">
+              <label>المبلغ (DZD)</label>
+              <input type="number" id="txAmount" min="0" step="1">
+            </div>
+          </div>
+          <div class="field">
+            <label>الوصف</label>
+            <input type="text" id="txDescription" placeholder="مثال: دفعة نقدية، خصم غياب يوم...">
+          </div>
+          <button class="btn" id="btnSubmitTx">تسجيل العملية</button>
+          <div class="helper">اختيار "سحب" يطبّق القاعدة المحاسبية تلقائيًا: يُخصم أولاً من المستحق، وما يتجاوزه يُسجَّل سلفة إضافية (بشرط عدم تجاوز حد السلفة).</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h2>السجل المالي الكامل</h2></div>
+        <div class="section-body" style="padding:0">
+          <table>
+            <thead><tr><th>التاريخ</th><th>النوع</th><th class="num">المبلغ</th><th>الوصف</th></tr></thead>
+            <tbody id="ledgerTable"></tbody>
+          </table>
+          <div class="empty" id="ledgerEmpty" style="display:none">لا توجد حركات مسجلة بعد لهذا العامل</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <a href="index.html"><span class="ic">🏠</span>الرئيسية</a>
+  <a href="workers.html" class="active"><span class="ic">👥</span>العمال</a>
+  <a href="salaries.html"><span class="ic">💰</span>الرواتب</a>
+  <a href="reports.html"><span class="ic">📊</span>التقارير</a>
+</nav>
+
+<div class="modal-backdrop" id="workerModal">
+  <div class="modal">
+    <h3 id="workerModalTitle">إضافة عامل جديد</h3>
+    <input type="hidden" id="wId">
+    <div class="form-row">
+      <div class="field"><label>رقم العامل</label><input type="text" id="fCode" placeholder="EMP-0001"></div>
+      <div class="field"><label>الاسم الكامل</label><input type="text" id="fName"></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>الوظيفة</label><input type="text" id="fPosition"></div>
+      <div class="field"><label>تاريخ الالتحاق</label><input type="date" id="fHireDate"></div>
+    </div>
+    <div class="form-row">
+      <div class="field num"><label>الراتب الشهري (DZD)</label><input type="number" id="fSalary" min="0"></div>
+      <div class="field num"><label>الحد الأقصى للسلفة (DZD)</label><input type="number" id="fAdvLimit" min="0"></div>
+    </div>
+    <div class="field">
+      <label>الحالة</label>
+      <select id="fStatus"><option value="active">نشط</option><option value="inactive">معطّل</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="btnCancelWorker">إلغاء</button>
+      <button class="btn" id="btnSaveWorker">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="limitModal">
+  <div class="modal">
+    <h3>⚠️ المبلغ يتجاوز حد السلفة</h3>
+    <p id="limitModalText"></p>
+    <p class="helper">يمكنك تجاوز الحد بصلاحية المدير. سيتم تسجيل هذا التجاوز في العملية.</p>
+    <div class="modal-actions">
+      <button class="btn secondary" id="btnCancelOverride">إلغاء</button>
+      <button class="btn danger" id="btnConfirmOverride">تجاوز الحد وتسجيل العملية</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/app.js"></script>
+<script src="js/workers.js"></script>
+</body>
+</html>
