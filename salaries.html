@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الرواتب الشهرية — نظام إدارة الرواتب</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-title">دفتر الرواتب</div>
+      <div class="brand-sub">نظام إدارة رواتب المؤسسة</div>
+    </div>
+    <a class="nav-link" href="index.html">🏠 لوحة التحكم</a>
+    <a class="nav-link" href="workers.html">👥 العمال</a>
+    <a class="nav-link" href="salaries.html">💰 الرواتب الشهرية</a>
+    <a class="nav-link" href="reports.html">📊 التقارير</a>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1>الرواتب الشهرية</h1>
+    </div>
+
+    <div id="alertBox"></div>
+
+    <div class="section">
+      <div class="section-body">
+        <div class="form-row" style="align-items:end">
+          <div class="field">
+            <label>السنة</label>
+            <select id="selYear"></select>
+          </div>
+          <div class="field">
+            <label>الشهر</label>
+            <select id="selMonth"></select>
+          </div>
+          <div class="field">
+            <button class="btn secondary" id="btnLoadMonth">عرض الشهر</button>
+          </div>
+        </div>
+        <div id="periodStatus"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2 id="monthTitle">—</h2>
+        <div style="display:flex; gap:.5rem">
+          <button class="btn" id="btnGenerate">توليد رواتب هذا الشهر</button>
+          <button class="btn danger" id="btnClose">إغلاق الشهر</button>
+        </div>
+      </div>
+      <div class="section-body" style="padding:0">
+        <table>
+          <thead>
+            <tr>
+              <th>العامل</th><th class="num">الراتب</th><th class="num">إضافات الشهر</th>
+              <th class="num">اقتطاعات الشهر</th><th class="num">المستحق (هذا الشهر)</th>
+              <th class="num">الرصيد المتبقي (تراكمي)</th>
+            </tr>
+          </thead>
+          <tbody id="monthTable"></tbody>
+        </table>
+        <div class="empty" id="monthEmpty" style="display:none">لم يتم توليد رواتب لهذا الشهر بعد</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <a href="index.html"><span class="ic">🏠</span>الرئيسية</a>
+  <a href="workers.html"><span class="ic">👥</span>العمال</a>
+  <a href="salaries.html" class="active"><span class="ic">💰</span>الرواتب</a>
+  <a href="reports.html"><span class="ic">📊</span>التقارير</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/app.js"></script>
+<script src="js/salaries.js"></script>
+</body>
+</html>
